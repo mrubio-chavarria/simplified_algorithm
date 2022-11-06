@@ -1,0 +1,18 @@
+{
+    "activators": {
+        "A": [], 
+        "B": ["I"],
+        "C": [],
+        "D": ["B", "D"],
+        "I": []
+    },
+    "inhibitors": {
+        "A": ["B", "D"], 
+        "B": ["A", "B"],
+        "C": ["B", "D"],
+        "D": ["C"],
+        "I": []
+    },
+    "attractors": ["10100", "01011"],
+    "networks_path": "/home/mario/Projects/simplified_bn_algorithm/printed_networks"
+}
