@@ -309,7 +309,7 @@ class Graph:
             self.filtered_ncbf_networks = self.get_ncbf_networks()
             self.networks = self.filtered_ncbf_networks
 
-    def print_networks_to_folder(self, folder_path=None, prefix="hallo"):
+    def print_networks_to_folder(self, folder_path=None, prefix="network_"):
         """
         DESCRIPTION:
         Method to write the networks into a specified folder.
