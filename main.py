@@ -25,7 +25,7 @@ def main():
     Function main to execute the code.
     """
     # Read input data
-    with open("input_data.json", "r") as file:
+    with open("input_data_mtor.json", "r") as file:
         input_data = json.load(file)
     # Create graph object
     graph = Graph(**input_data)
@@ -38,6 +38,7 @@ def main():
     # Save
     graph.print_networks_to_folder()
     # Print result
+    print("Process completed")
     print(graph)
 
     

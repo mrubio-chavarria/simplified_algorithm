@@ -321,6 +321,7 @@ class Graph:
         :param folder_path: [str] path to the folder to store the networks.
         :param prefix: [str] prefix to name the network files.
         """
+        print("Saving networks to folder")
         if not folder_path:
             folder_path = self.networks_path
         networks = [
@@ -333,4 +334,4 @@ class Graph:
             with open(folder_path + f"/{prefix}_{i}.txt", "w") as file:
                 file.write(network)
             i += 1
-        return None
+        print("Networks saved")
