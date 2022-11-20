@@ -4,6 +4,7 @@ import os
 import itertools
 from random import sample
 from string import ascii_uppercase, digits
+from tqdm import tqdm
 from source.ncbf_utils import ncbf_generator
 from source.bn_utils import prefilter_by_attractor
 from source.bn_utils import minterms2bnet
@@ -268,19 +269,22 @@ class Graph:
             return zip([self.pathways_index] * len(networks), networks)
 
         # Generate by node all the NCBFs
+        print("Generating NCBF from the pathway groups:")
         total_ncbf = [[ncbf_generator(group[node]['activators'], group[node]['inhibitors'], self.graph_space, set(self.nodes)) 
-            for node in self.nodes] for group in self.pathway_groups]
+            for node in self.nodes] for group in tqdm(self.pathway_groups)]
         # # Format all the NCBF groups conveniently: (pathway group position, NCBF
         # # network in dict). 
         # if self.mixed_pathways:
         #     pre_networks = [it for sb in [ncbf_formatter_mixed_pathways(total_ncbf[i]) for i in range(len(total_ncbf))] for it in sb]
         # else:
         #     pre_networks = [it for sb in [ncbf_formatter_standard(total_ncbf[i], i) for i in range(len(total_ncbf))] for it in sb]
-        ncbf_networks = [it for sb in [ncbf_formatter_standard(total_ncbf[i], i) for i in range(len(total_ncbf))] for it in sb]
+        print("Formatting networks:")
+        ncbf_networks = [it for sb in [ncbf_formatter_standard(total_ncbf[i], i) for i in tqdm(range(len(total_ncbf)))] for it in sb]
         # Filter the equivalent networks
         codes = []
         final_ncbf_networks = []
-        for network in ncbf_networks:
+        print("Filter equivalent networks:")
+        for network in tqdm(ncbf_networks):
             # code = str(network[0]) + '$$' + '&'.join(['|'.join(sorted(net)) for _, net in sorted(network[1].items(), key=lambda x: x[0])])
             code = '&'.join(['|'.join(sorted(net)) for _, net in sorted(network[1].items(), key=lambda x: x[0])])
             if code not in codes:
@@ -299,6 +303,7 @@ class Graph:
         PyBoolNet.
         """
         if (self.attractors is not None) and (self.attractors != []):
+            print("Performing attractor-based filtering...")
             self.filtered_ncbf_networks = list(filter(lambda network: network is not None, self.get_ncbf_networks()))
             if self.filtered_ncbf_networks:
                 self.filtered_ncbf_networks = list(prefilter_by_attractor(self.filtered_ncbf_networks, self.attractors))
@@ -309,7 +314,7 @@ class Graph:
             self.filtered_ncbf_networks = self.get_ncbf_networks()
             self.networks = self.filtered_ncbf_networks
 
-    def print_networks_to_folder(self, folder_path=None, prefix="network_"):
+    def print_networks_to_folder(self, folder_path=None, prefix="network"):
         """
         DESCRIPTION:
         Method to write the networks into a specified folder.
